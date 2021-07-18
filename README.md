@@ -3,6 +3,14 @@
 An app with a roadmap to help you organise your studies in Dart and Flutter.
 This app was made as a capstone app during **Flutter Bootcamp @ GDG London**.
 
+<table >
+    <tr>
+        <td><img src="meta/img1.png" width = 308x height = 600px></td>
+        <td><a> </a></td>
+        <td><img src="meta/img2.png" width = 308px height = 600px></td>
+    </tr>
+</table>
+
 # Stack 📚
 
 ## Back-end 🚪
