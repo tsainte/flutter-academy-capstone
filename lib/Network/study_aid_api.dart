@@ -4,17 +4,19 @@ import 'package:flutter_academy_capstone/model/study_aid.dart';
 import 'package:http/http.dart' as http;
 
 class StudyAidApi {
-  static const bool _isProd = true;
+  static const bool _isProd = false;
   static const baseURI = _isProd
       ? 'https://flutteracademycapstoneapi-zt77jxkv3a-uc.a.run.app/'
       : 'http://localhost:8080';
   var client = http.Client();
+
   Future<List<StudyAid>> getStudyAids() async {
     final url = Uri.parse(baseURI + '/study_aids');
-
+    print('getting study aids... $url');
     final response = await client.get(url);
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
+    print("response: $decodedJson");
     return decodedJson.map((e) => StudyAid.fromJson(e)).toList();
   }
 
@@ -23,6 +25,7 @@ class StudyAidApi {
     final response = await client.get(url);
 
     final dynamic decodedJson = jsonDecode(response.body);
+    print("response: $decodedJson");
     return StudyAid.fromJson(decodedJson);
   }
 }

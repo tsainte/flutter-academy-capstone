@@ -84,13 +84,14 @@ class _StudyListCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(_studyAid.title);
     return GestureDetector(
       child: Container(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
             _studyAid.title,
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 24, color: Colors.amber),
           ),
         ),
       ),

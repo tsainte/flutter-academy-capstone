@@ -33,7 +33,10 @@ class StudyAidView extends StatelessWidget {
               case ConnectionState.waiting:
                 return Progress();
             }
-            return Text('unkwown error');
+            return Container(
+              child: Text('unkwown error'),
+              color: Colors.white,
+            );
           },
         ),
       ),
