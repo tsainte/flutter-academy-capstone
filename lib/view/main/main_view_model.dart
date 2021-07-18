@@ -33,12 +33,16 @@ class MainViewModel {
         return CupertinoTabView(builder: (context) => BadgesList());
       case 2:
         return CupertinoTabView(
-            builder: (context) =>
-                Center(child: Text('Resources not implemented')));
+            builder: (context) => Container(
+                  color: Colors.lightBlue[50],
+                  child: Center(child: Text('Resources not implemented')),
+                ));
       case 3:
         return CupertinoTabView(
-            builder: (context) =>
-                Center(child: Text('Settings not implemented')));
+            builder: (context) => Container(
+                  color: Colors.lightBlue[50],
+                  child: Center(child: Text('Settings not implemented')),
+                ));
       default:
         return Text('1');
     }

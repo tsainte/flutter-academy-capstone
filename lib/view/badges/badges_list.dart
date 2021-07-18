@@ -8,7 +8,7 @@ class BadgesList extends StatelessWidget {
     return Container(
       color: Colors.lightBlue[50],
       child: Center(
-        child: Text('Badges not implemented'),
+        child: Text('Badges not implemented yet...'),
       ),
     );
   }

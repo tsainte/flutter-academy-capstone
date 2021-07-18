@@ -18,26 +18,29 @@ class StudyAidView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: SafeArea(
-        child: FutureBuilder(
-          future: _viewModel.getStudyAid(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.active:
-                print('active');
-                break;
-              case ConnectionState.done:
-                return _ContentStudyAid(_viewModel);
-              case ConnectionState.none:
-                print('none');
-                break;
-              case ConnectionState.waiting:
-                return Progress();
-            }
-            return Container(
-              child: Text('unkwown error'),
-              color: Colors.white,
-            );
-          },
+        child: Container(
+          color: Colors.white,
+          child: FutureBuilder(
+            future: _viewModel.getStudyAid(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.active:
+                  print('active');
+                  break;
+                case ConnectionState.done:
+                  return _ContentStudyAid(_viewModel);
+                case ConnectionState.none:
+                  print('none');
+                  break;
+                case ConnectionState.waiting:
+                  return Progress();
+              }
+              return Container(
+                child: Text('unkwown error'),
+                color: Colors.white,
+              );
+            },
+          ),
         ),
       ),
       navigationBar: NavBar.make(_viewModel.title),
@@ -86,9 +89,8 @@ class _ContentStudyAid extends StatelessWidget {
             data: content));
   }
 
-  void openURL(String url) async {
-    await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
-  }
+  void openURL(String url) async =>
+      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 }
 
 class _Checklist extends StatefulWidget {

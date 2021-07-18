@@ -14,7 +14,8 @@ class StudyList extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: NavBar.make('Flutter Academy 👩‍🎓'),
-      child: _StudyListContent(viewModel),
+      child:
+          Container(child: _StudyListContent(viewModel), color: Colors.white),
     );
   }
 }
@@ -91,7 +92,7 @@ class _StudyListCell extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Text(
             _studyAid.title,
-            style: TextStyle(fontSize: 24, color: Colors.amber),
+            style: TextStyle(fontSize: 24, color: Colors.grey[850]),
           ),
         ),
       ),

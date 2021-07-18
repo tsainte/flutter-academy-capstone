@@ -9,11 +9,13 @@ class StudyAidApi {
       ? 'https://flutteracademycapstoneapi-zt77jxkv3a-uc.a.run.app/'
       : 'http://localhost:8080';
   var client = http.Client();
-
+  final headers = {
+    "Access-Control-Allow-Origin": "*"
+  }; //header("Access-Control-Allow-Origin: *");
   Future<List<StudyAid>> getStudyAids() async {
     final url = Uri.parse(baseURI + '/study_aids');
     print('getting study aids... $url');
-    final response = await client.get(url);
+    final response = await client.get(url, headers: headers);
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
     print("response: $decodedJson");
