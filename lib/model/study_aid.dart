@@ -27,6 +27,22 @@ class StudyAid {
     );
   }
 
+  StudyAid copyWith({
+    int? id,
+    String? title,
+    String? content,
+    List<ChecklistItem>? checklist,
+    bool? isCompleted,
+  }) {
+    return StudyAid(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      checklist: checklist ?? this.checklist,
+      isCompleted: isCompleted ?? this.isCompleted,
+    );
+  }
+
   static List<ChecklistItem> _items(List<dynamic> json) =>
       json.map((e) => ChecklistItem.fromJson(e)).toList();
 }

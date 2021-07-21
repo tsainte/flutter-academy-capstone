@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_academy_capstone/Network/study_aid_api.dart';
 import 'package:flutter_academy_capstone/model/study_aid.dart';
 
@@ -34,14 +35,6 @@ class StudyAidViewModel {
       return '$checked/$total';
     } else {
       return '';
-    }
-  }
-
-  void markComplete() {
-    if (_studyAid.checklist != null) {
-      for (int i = 0; i < _studyAid.checklist!.length; i++) {
-        _studyAid.checklist![i].isChecked = true;
-      }
     }
   }
 }

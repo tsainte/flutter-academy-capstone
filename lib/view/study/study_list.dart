@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_academy_capstone/components/nav_bar.dart';
 import 'package:flutter_academy_capstone/components/progress.dart';
 import 'package:flutter_academy_capstone/model/study_aid.dart';
+import 'package:flutter_academy_capstone/model/study_aid_notifier.dart';
 import 'package:flutter_academy_capstone/view/study/study_aid_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'study_list_view_model.dart';
 
 class StudyList extends StatelessWidget {
@@ -79,12 +81,12 @@ class _Content extends StatelessWidget {
   }
 }
 
-class _StudyListCell extends StatelessWidget {
+class _StudyListCell extends ConsumerWidget {
   _StudyListCell(this._studyAid, {Key? key}) : super(key: key);
   final StudyAid _studyAid;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
     print(_studyAid.title);
     return GestureDetector(
       child: Container(
@@ -97,8 +99,10 @@ class _StudyListCell extends StatelessWidget {
         ),
       ),
       onTap: () {
-        Navigator.of(context).push(CupertinoPageRoute(
-            builder: (context) => StudyAidView(_studyAid.id, _studyAid.title)));
+        Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
+          watch(selectedStudyAidProvider).studyAid = _studyAid;
+          return StudyAidView(_studyAid.id, _studyAid.title);
+        }));
       },
     );
   }

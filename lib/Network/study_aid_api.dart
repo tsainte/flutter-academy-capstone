@@ -4,7 +4,7 @@ import 'package:flutter_academy_capstone/model/study_aid.dart';
 import 'package:http/http.dart' as http;
 
 class StudyAidApi {
-  static const bool _isProd = true;
+  static const bool _isProd = false;
   static const baseURI = _isProd
       ? 'https://flutteracademycapstoneapi-zt77jxkv3a-uc.a.run.app/'
       : 'http://localhost:8080';

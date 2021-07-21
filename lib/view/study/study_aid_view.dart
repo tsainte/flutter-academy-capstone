@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_academy_capstone/components/cheap_checkbox.dart';
 import 'package:flutter_academy_capstone/components/nav_bar.dart';
 import 'package:flutter_academy_capstone/components/progress.dart';
+import 'package:flutter_academy_capstone/model/study_aid.dart';
+import 'package:flutter_academy_capstone/model/study_aid_notifier.dart';
 import 'package:flutter_academy_capstone/view/study/study_aid_view_model.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StudyAidView extends StatelessWidget {
@@ -14,6 +17,7 @@ class StudyAidView extends StatelessWidget {
   final String _studyAidTitle;
   late final StudyAidViewModel _viewModel =
       StudyAidViewModel(_studyAidId, _studyAidTitle);
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -72,7 +76,7 @@ class _ContentStudyAid extends StatelessWidget {
             ),
           ),
         ),
-        _CompleteBanner(_viewModel),
+        CompleteBanner(),
       ],
     );
   }
@@ -152,34 +156,27 @@ class __ChecklistState extends State<_Checklist> {
   }
 }
 
-class _CompleteBanner extends StatefulWidget {
-  final StudyAidViewModel viewModel;
-  _CompleteBanner(this.viewModel, {Key? key}) : super(key: key);
+class CompleteBanner extends ConsumerWidget {
+  CompleteBanner({Key? key}) : super(key: key);
 
   @override
-  __CompleteBannerState createState() => __CompleteBannerState();
-}
-
-class __CompleteBannerState extends State<_CompleteBanner> {
-  StudyAidViewModel? viewModel;
-  bool _isComplete = false;
-
-  @override
-  Widget build(BuildContext context) {
-    viewModel = widget.viewModel;
+  Widget build(BuildContext context, ScopedReader watch) {
+    StudyAid studyAid = watch(studyAidProvider);
+    bool isCompleted = studyAid.isCompleted ?? false;
     return Container(
       alignment: Alignment.bottomLeft,
-      color: _isComplete ? Colors.green[500] : Colors.grey[200],
+      color: isCompleted ? Colors.green[500] : Colors.grey[200],
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _isComplete ? _completeBanner() : _incompleteBanner(),
+        child: isCompleted ? _completeBanner(watch) : _incompleteBanner(watch),
       ),
     );
   }
 
-  Widget _completeBanner() {
+  Widget _completeBanner(ScopedReader watch) {
+    final studyAidNotifier = watch(studyAidProvider.notifier);
     return GestureDetector(
-      onTap: () => setState(_toggle),
+      onTap: () => _toggle(studyAidNotifier),
       child: Center(
         child: Text(
           'Completed! 🎉',
@@ -189,7 +186,8 @@ class __CompleteBannerState extends State<_CompleteBanner> {
     );
   }
 
-  Widget _incompleteBanner() {
+  Widget _incompleteBanner(ScopedReader watch) {
+    final studyAidNotifier = watch(studyAidProvider.notifier);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -198,17 +196,18 @@ class __CompleteBannerState extends State<_CompleteBanner> {
           style: TextStyle(fontSize: 24),
         ),
         CupertinoSwitch(
-          value: _isComplete,
-          onChanged: (value) => setState(_toggle),
+          value: studyAidNotifier.isCompleted,
+          onChanged: (value) => _toggle(studyAidNotifier),
         )
       ],
     );
   }
 
-  void _toggle() {
-    if (!_isComplete) {
-      viewModel!.markComplete();
+  void _toggle(StudyAidNotifier studyAidNotifier) {
+    if (!studyAidNotifier.isCompleted) {
+      studyAidNotifier.markCompleted();
+    } else {
+      studyAidNotifier.markIncompleted();
     }
-    _isComplete = !_isComplete;
   }
 }
