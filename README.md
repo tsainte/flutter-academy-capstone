@@ -30,6 +30,8 @@ The initial version of this app was made in **Flutter**, with Cupertino (iOS) as
 
 * `url_launcher`: to open links
 
+* `flutter_riverpod`: state management
+
 # Next Steps 🚶‍♀️
 
 Many shortctus were taken during the development of this application. Here's what I'd work on next, with more time available.
@@ -44,14 +46,19 @@ Many shortctus were taken during the development of this application. Here's wha
 
 * Layout improvements overall
 
-* Support for proper Android with Material design
+* A better support for Android with Material design
 
-* Support for Web
+* A better support for web
+
 
 ## Code 👩‍💻
 
-* Implement state management properly, maybe by using Riverpod or another provider-like library
+* Improve state management
 
 * Implement Widget tests and Unit tests
 
 * Continuous deployment to Google Cloud
+
+* Offline mode
+
+* Persist data such as checklist

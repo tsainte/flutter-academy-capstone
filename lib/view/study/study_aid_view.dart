@@ -5,34 +5,33 @@ import 'package:flutter_academy_capstone/components/nav_bar.dart';
 import 'package:flutter_academy_capstone/components/progress.dart';
 import 'package:flutter_academy_capstone/model/study_aid.dart';
 import 'package:flutter_academy_capstone/model/study_aid_notifier.dart';
-import 'package:flutter_academy_capstone/view/study/study_aid_view_model.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class StudyAidView extends StatelessWidget {
+class StudyAidView extends ConsumerWidget {
   StudyAidView(this._studyAidId, this._studyAidTitle, {Key? key})
       : super(key: key);
   final int _studyAidId;
   final String _studyAidTitle;
-  late final StudyAidViewModel _viewModel =
-      StudyAidViewModel(_studyAidId, _studyAidTitle);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
+    final studyAidNotifier = watch(studyAidProvider.notifier);
+
     return CupertinoPageScaffold(
       child: SafeArea(
         child: Container(
           color: Colors.white,
           child: FutureBuilder(
-            future: _viewModel.getStudyAid(),
+            future: studyAidNotifier.fetchStudyAidDetails(_studyAidId),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.active:
                   print('active');
                   break;
                 case ConnectionState.done:
-                  return _ContentStudyAid(_viewModel);
+                  return _ContentStudyAid(studyAidNotifier.content);
                 case ConnectionState.none:
                   print('none');
                   break;
@@ -47,18 +46,17 @@ class StudyAidView extends StatelessWidget {
           ),
         ),
       ),
-      navigationBar: NavBar.make(_viewModel.title),
+      navigationBar: NavBar.make(_studyAidTitle),
     );
   }
 }
 
 class _ContentStudyAid extends StatelessWidget {
+  final String _content;
   _ContentStudyAid(
-    this._viewModel, {
+    this._content, {
     Key? key,
   }) : super(key: key);
-
-  final StudyAidViewModel _viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +68,8 @@ class _ContentStudyAid extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
             child: ListView(
               children: [
-                _markdownWidget(_viewModel.content),
-                _Checklist(_viewModel),
+                _markdownWidget(_content),
+                _Checklist(),
               ],
             ),
           ),
@@ -97,34 +95,26 @@ class _ContentStudyAid extends StatelessWidget {
       await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 }
 
-class _Checklist extends StatefulWidget {
-  final StudyAidViewModel _viewModel;
-  _Checklist(this._viewModel, {Key? key}) : super(key: key);
-
+class _Checklist extends ConsumerWidget {
   @override
-  __ChecklistState createState() => __ChecklistState();
-}
-
-class __ChecklistState extends State<_Checklist> {
-  StudyAidViewModel? _viewModel;
-  @override
-  Widget build(BuildContext context) {
-    _viewModel = widget._viewModel;
+  Widget build(BuildContext context, ScopedReader watch) {
+    final _ = watch(studyAidProvider);
+    StudyAidNotifier notifier = watch(studyAidProvider.notifier);
     return Container(
       color: Colors.grey[200],
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(children: [
-          _headerChecklist(),
+          _headerChecklist(notifier.checklistText()),
           SizedBox(height: 16.0),
-          for (int i = 0; i < _viewModel!.checklistCount; i++)
-            _checklistItem(i),
+          for (int i = 0; i < notifier.checklistCount; i++)
+            _checklistItem(i, notifier),
         ]),
       ),
     );
   }
 
-  Widget _headerChecklist() {
+  Widget _headerChecklist(String text) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -132,24 +122,25 @@ class __ChecklistState extends State<_Checklist> {
           'Checklist',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        Text(_viewModel!.checklistText()),
+        Text(text),
       ],
     );
   }
 
-  Widget _checklistItem(int index) {
+  Widget _checklistItem(int index, StudyAidNotifier notifier) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CheapCheckbox(
-            _viewModel!.itemIsChecked(index),
-            onChanged: (bool value) =>
-                setState(() => _viewModel!.setIsChecked(index, value)),
+            notifier.itemIsChecked(index),
+            onChanged: (bool value) {
+              notifier.setIsChecked(index, value);
+            },
           ),
           SizedBox(width: 8),
-          Expanded(child: Text(_viewModel!.itemTitle(index))),
+          Expanded(child: Text(notifier.itemTitle(index))),
         ],
       ),
     );
